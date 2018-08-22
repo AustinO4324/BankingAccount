@@ -1,0 +1,39 @@
+﻿@model IEnumerable<BankAccountNet.Models.TermDeposit>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Deposit)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TermCreation)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Deposit)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TermCreation)
+        </td>
+        <td>
+            @Html.ActionLink("Details", "Details", new { id = item.TermDepositID }) |
+            @Html.ActionLink("Return", "ViewAccounts", new { id = item.TermDepositID }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.TermDepositID })
+        </td>
+    </tr>
+}
+
+</table>

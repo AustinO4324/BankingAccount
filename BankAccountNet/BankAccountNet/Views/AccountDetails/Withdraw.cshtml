@@ -1,0 +1,18 @@
+﻿@model BankAccountNet.Models.AccountDetail
+
+@{
+    ViewBag.Title = "Withdraw";
+}
+
+<h2>Withdraw</h2>
+
+<div class="jumbotron">
+
+    @Html.Label("Amount")
+    @Html.EditorFor(model => model.Balance)<br><br>
+    <input type="submit" value="Withdraw" class="btn btn-default" />
+    @Html.ActionLink("Cancel Transaction", "ViewAccounts", new { id = Model.AccountID })
+
+
+</div>
+
