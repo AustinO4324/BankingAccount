@@ -13,7 +13,7 @@ namespace BankAccountNet.Models
         [Required]
         [DataType(DataType.Currency)]
         public double Deposit { get; set; }
-        [DataType(DataType.DateTime)]
+        [DataType(DataType.Date)]
         public DateTime TermCreation { get; set; }
 
     }

@@ -48,7 +48,7 @@ namespace BankAccountNet.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "AccountID,AccountType,CreationDate,Balance,CustomerID,TermDepositID")] AccountDetail accountDetail)
+        public ActionResult Create( AccountDetail accountDetail)
         {
             if (ModelState.IsValid)
             {
@@ -82,7 +82,7 @@ namespace BankAccountNet.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "AccountID,AccountType,CreationDate,Balance,CustomerID,TermDepositID")] AccountDetail accountDetail)
+        public ActionResult Edit(AccountDetail accountDetail)
         {
             if (ModelState.IsValid)
             {
@@ -101,11 +101,12 @@ namespace BankAccountNet.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             AccountDetail accountDetail = db.AccountInfos.Find(id);
+            TempData["AccountBalance"] = accountDetail.Balance;
             if (accountDetail == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "FirstName", accountDetail.Balance);
+            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "FirstName", accountDetail.CustomerID);
 
 
             return View(accountDetail);
@@ -117,12 +118,14 @@ namespace BankAccountNet.Controllers
         {
             if (ModelState.IsValid)
             {
-
+                var depositAmount = accountDetail.Balance;
+                accountDetail.Balance = (double)TempData["AccountBalance"];
+                accountDetail.Balance += depositAmount;
                 db.Entry(accountDetail).State = EntityState.Modified;
                 db.SaveChanges();
-                
+                return RedirectToAction("Index", new { id = accountDetail.CustomerID });
             }
-            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "FirstName", accountDetail.Balance);
+            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "FirstName", accountDetail.CustomerID);
             return View(accountDetail);
         }
 
@@ -134,10 +137,12 @@ namespace BankAccountNet.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             AccountDetail accountDetail = db.AccountInfos.Find(id);
+            TempData["AccountBalance"] = accountDetail.Balance;
             if (accountDetail == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "FirstName", accountDetail.CustomerID);
             return View(accountDetail);
         }
 
@@ -147,9 +152,12 @@ namespace BankAccountNet.Controllers
         {
             if (ModelState.IsValid)
             {
+                var withdrawAmount = accountDetail.Balance;
+                accountDetail.Balance = (double)TempData["AccountBalance"];
+                accountDetail.Balance -= withdrawAmount;
                 db.Entry(accountDetail).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { id = accountDetail.CustomerID});
             }
             ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "FirstName", accountDetail.CustomerID);
             return View(accountDetail);

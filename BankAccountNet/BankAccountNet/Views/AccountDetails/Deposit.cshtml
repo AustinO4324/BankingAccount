@@ -6,11 +6,49 @@
 
 <h2>Deposit</h2>
 
-<div class="jumbotron">
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
 
-    @Html.Label("Amount")
-    @Html.EditorFor(model => model.Balance)<br><br>
-    <input type="submit" value="Deposit" class="btn btn-default" />
-    @Html.ActionLink("Cancel Transaction", "ViewAccounts", new { id = Model.AccountID }) 
+<div class="form-horizontal">
+    <h4>AccountDetail</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.AccountID)
 
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.CustomerID)
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.CreationDate)
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.TermDepositID)
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.AccountType)
+
+
+    <div class="form-group">
+
+        <div class="col-md-10">
+            @Html.LabelFor(model => model.Balance, "Deposit Amount:")
+            @Html.EditorFor(model => model.Balance, new { @Value = "0.00" })
+            @Html.ValidationMessageFor(model => model.Balance, "", new { @Value = "0.00" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
 </div>
+        }
+
+    <div>
+        @Html.ActionLink("Cancel Transaction", "ViewAccounts", new { id = Model.AccountID })
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
